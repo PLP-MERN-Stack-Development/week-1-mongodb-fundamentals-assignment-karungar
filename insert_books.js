@@ -8,7 +8,7 @@ const uri = 'mongodb://localhost:27017';
 
 // Database and collection names
 const dbName = 'plp_bookstore';
-const collectionName = 'books';
+const collectionName = 'Books';
 
 // Sample book data
 const books = [
