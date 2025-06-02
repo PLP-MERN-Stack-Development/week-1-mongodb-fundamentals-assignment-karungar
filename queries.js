@@ -15,14 +15,14 @@ db.Books.updateOne(
   )
 
 // This query deletes the book "Animal Farm"
-  db.books.deleteOne({ title: "Animal Farm" })
+  db.Books.deleteOne({ title: "Animal Farm" })
 
 // Task 3: Advanced Queries
-// This query finds all books that are in stock and published after 2010 (with projection), 
-db.books.find(
+// This query finds all books that are in stock and published after 1920 (with projection), 
+db.Books.find(
     {
       in_stock: true,
-      published_year: { $gt: 2010 }
+      published_year: { $gt: 1920 }
     },
     {
       _id: 0,           // Exclude document ID
@@ -33,34 +33,34 @@ db.books.find(
   )
 
 // This query sorts the books by price starting from the cheapest,
-db.books.find({}, {title: 1, author: 1, price: 1, _id: 0})
+db.Books.find({}, {title: 1, author: 1, price: 1, _id: 0})
 .sort({price: 1})
 
 // This query sorts the books by price starting from the most expensive,
-db.books.find({}, {title: 1, author: 1, price: 1, _id: 0})
+db.Books.find({}, {title: 1, author: 1, price: 1, _id: 0})
        .sort({price: -1})
 
 // This query limits the number of books displayed using limit and skip methods
 // Page 1
-db.books.find({}, {title: 1, author: 1, price: 1, _id: 0})
+db.Books.find({}, {title: 1, author: 1, price: 1, _id: 0})
        .limit(5)
        .skip(0) // Adjust skip value for pagination
 //Page 2
-db.books.find({}, {title: 1, author: 1, price: 1, _id: 0})
+db.Books.find({}, {title: 1, author: 1, price: 1, _id: 0})
        .limit(5)
        .skip(5) // Adjust skip value for pagination
 //Page 3
-db.books.find({}, {title: 1, author: 1, price: 1, _id: 0})
+db.Books.find({}, {title: 1, author: 1, price: 1, _id: 0})
        .limit(5)
        .skip(10) // Adjust skip value for pagination
        
 
 // Combined Query
-// Paginated results of in-stock books after 2010, sorted high-to-low price (Page 1):
-db.books.find(
+// Paginated results of in-stock books after 1920, sorted high-to-low price (Page 1):
+db.Books.find(
     { 
       in_stock: true,
-      published_year: { $gt: 2010 }
+      published_year: { $gt: 1920 }
     },
     { 
       _id: 0, 
@@ -76,7 +76,7 @@ db.books.find(
 // Task 4: Aggregation Pipeline
 // This aggregation pipeline calculates the average price of books by genre
 
-db.books.aggregate([
+db.Books.aggregate([
   {
     $group: {
       _id: "$genre",
@@ -89,7 +89,7 @@ db.books.aggregate([
 ])
 
 // This aggregation pipeline finds the author with most books in the collection
-db.books.aggregate([
+db.Books.aggregate([
   {
     $group: {
       _id: "$author",
@@ -105,7 +105,7 @@ db.books.aggregate([
 ])
 
 // This aggregation pipeline groups books by publication decade and counts them
-db.books.aggregate([
+db.Books.aggregate([
   {
     $group: {
       _id: { $floor: { $divide: ["$published_year", 10] } }, // Group by decade
@@ -127,16 +127,16 @@ db.books.aggregate([
 //Task 5: Indexing
 // Create an index on the 'title' field to speed up searches by title
 
-db.books.createIndex({ title: 1 })
+db.Books.createIndex({ title: 1 })
 
 // Create a compound index on 'author' and 'published_year'
-db.books.createIndex({ author: 1, published_year: -1 })
+db.Books.createIndex({ author: 1, published_year: -1 })
 
 //Use the explain() method to demonstrate the performance improvement with your indexes
 // 1. single field index test
 //query without index and then with index
-db.books.find({ title: "The Hobbit" }).explain("executionStats")
+db.Books.find({ title: "The Hobbit" }).explain("executionStats")
 
 // 2. compound index test
 //query without index and then with index
-db.books.find({ author: "J.R.R. Tolkien", published_year: { $gt: 1937 } }).explain("executionStats")
+db.Books.find({ author: "J.R.R. Tolkien", published_year: { $gt: 1937 } }).explain("executionStats")
